@@ -1,0 +1,18 @@
+/*    -- This is a decision for the whole Base table because in the task we don't have 100% understanding of which table has to be counted.
+
+SELECT 
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM Base)), 2) || '%' AS Percentage_EN_US
+FROM 
+    Base
+WHERE 
+    SourceLanguageCode = 'EN-US';
+*/
+
+-- this is decision for our transformed table, wich'll be our data source in PBI
+SELECT 
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM Base b JOIN Job j ON b.JobSK = j.JobSK)), 2) || '%' AS Percentage_EN_US
+FROM 
+    Base b
+    JOIN Job j ON b.JobSK = j.JobSK
+WHERE 
+    b.SourceLanguageCode = 'EN-US' AND b.JobStateName <> 'Canceled';
