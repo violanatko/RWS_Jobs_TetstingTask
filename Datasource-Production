@@ -1,0 +1,24 @@
+SELECT 
+    B.JobSK,
+    B.Job,
+    J.JobID,
+    J.ProjectNo,
+    B.SourceLanguageCode,
+    B.JobStateName,
+    B.CreatedDate AS Job_CreatedDate,
+    B.CompletedDate AS Job_CompletedDate,
+    T.Wordcount,
+        CASE 
+        WHEN b.Classification = 'H' THEN 0
+        WHEN b.Classification = 'M' THEN 1
+        WHEN b.Classification = 'L' THEN 2
+        ELSE 3
+    END AS Priority
+FROM 
+    Base B
+LEFT JOIN 
+    Job J ON B.JobSK = J.JobSK
+INNER JOIN 
+    Tasks T ON J.JobID = T.JobID
+WHERE 
+    B.JobStateName <> 'Canceled';
